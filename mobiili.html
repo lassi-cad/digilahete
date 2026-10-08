@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Mobiilityölähete — Hammaslaboratorio Neodent</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-size: 15px; line-height: 1.35; color: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f1f5f9; padding: 0; margin: 0;
+  }
+  
+  /* Työkalupalkki */
+  .screen-toolbar {
+    background: #0f172a; color: #fff; padding: 10px 16px; position: sticky; top: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  }
+  .toolbar-brand { display: flex; align-items: center; gap: 8px; }
+  .toolbar-brand h3 { margin: 0; font-size: 0.95rem; font-weight: 800; color: #f8fafc; }
+  
+  .btn-wa-top {
+    background: #25D366; color: #fff; padding: 7px 14px; border-radius: 6px; font-weight: 800; font-size: 0.82rem;
+    border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  }
+  .btn-wa-top:hover { background: #20ba59; }
+
+  .m-container { max-width: 600px; margin: 0 auto; padding: 14px 12px 60px; font-size: 15px; }
+
+  .m-hero {
+    background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 16px 18px;
+    border-radius: 14px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(2,132,199,0.25);
+  }
+  .m-hero-sub { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; opacity: 0.9; }
+  .m-hero h1 { font-size: 1.3rem; margin: 4px 0 4px 0; font-weight: 800; }
+  .m-hero p { margin: 0; font-size: 0.85rem; opacity: 0.95; line-height: 1.3; }
+
+  .m-card {
+    background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; padding: 14px 16px; margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .m-card-title {
+    font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; display: flex;
+    align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .m-label { display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 4px; }
+  .m-hint { font-weight: normal; font-size: 0.74rem; color: #64748b; }
+  
+  .m-input, .m-select, .m-textarea {
+    width: 100%; font-size: 16px !important;
+    padding: 10px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #fff;
+    box-sizing: border-box; font-family: inherit; color: #0f172a; margin-bottom: 8px;
+  }
+  .m-input:focus, .m-select:focus, .m-textarea:focus { border-color: #0284c7; outline: none; background: #f0f9ff; }
+  .m-textarea { resize: vertical; min-height: 65px; }
+
+  /* Työtyypit */
+  .m-type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 4px; }
+  .m-type-btn {
+    border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer;
+    background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: all 0.12s ease; user-select: none;
+  }
+  .m-type-btn:active { transform: scale(0.98); }
+  .m-type-btn.active {
+    border-color: #0284c7; background: #f0f9ff; box-shadow: 0 2px 8px rgba(2,132,199,0.22);
+  }
+  .m-type-btn .m-type-icon { font-size: 1.5rem; margin-bottom: 2px; }
+  .m-type-btn .m-type-name { font-weight: 800; font-size: 0.86rem; color: #0f172a; }
+  .m-type-btn .m-type-desc { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+
+  /* Hammaskartta */
+  .m-tooth-chart {
+    background: #f8fafc; border-radius: 10px; padding: 10px 6px; border: 1px solid #cbd5e1; margin-top: 6px;
+  }
+  .m-tooth-row { display: flex; gap: 3px; justify-content: center; margin-bottom: 5px; }
+  .m-tooth-btn {
+    width: 33px; height: 33px; border-radius: 6px; border: 1.5px solid #94a3b8; background: #fff;
+    font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; user-select: none; transition: all 0.1s; color: #334155;
+  }
+  .m-tooth-btn:active { transform: scale(0.92); }
+  .m-tooth-btn.selected {
+    background: #0284c7; color: #fff; border-color: #0369a1; box-shadow: 0 2px 6px rgba(2,132,199,0.35);
+  }
+  .m-tooth-divider { width: 2px; background: #0f172a; margin: 0 3px; height: 33px; border-radius: 1px; }
+
+  /* Sävyvalitsin */
+  .m-shade-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .m-shade-pill {
+    padding: 7px 13px; border-radius: 20px; border: 1.5px solid #cbd5e1; background: #fff;
+    font-weight: 800; font-size: 0.85rem; cursor: pointer; user-select: none; transition: all 0.1s;
+  }
+  .m-shade-pill.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+
+  /* Toimintonapit */
+  .m-btn-wa-main {
+    background: #25D366; color: #fff; width: 100%; padding: 14px 16px; font-size: 1.05rem; font-weight: 800;
+    border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(37,211,102,0.35);
+    display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;
+    text-decoration: none; user-select: none;
+  }
+  .m-btn-wa-main:active { transform: scale(0.98); background: #20ba59; }
+
+  .m-btn-copy-main {
+    background: #0284c7; color: #fff; width: 100%; padding: 12px 16px; font-size: 0.95rem; font-weight: 800;
+    border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 8px; user-select: none;
+  }
+  .m-btn-copy-main:active { transform: scale(0.98); background: #0369a1; }
+</style>
+</head>
+<body>
+
+<div class="screen-toolbar">
+  <div class="toolbar-brand">
+    <span style="font-size:1.3rem;">🦷</span>
+    <div>
+      <h3>Hammaslaboratorio Neodent</h3>
+    </div>
+  </div>
+  <div>
+    <button type="button" class="btn-wa-top" onclick="sendViaWhatsApp()">
+      📲 Lähetä WhatsAppilla
+    </button>
+  </div>
+</div>
+
+<div class="m-container">
+  <div class="m-hero">
+    <div class="m-hero-sub">Hammaslaboratorio Neodent</div>
+    <h1>⚡ Sähköinen työlähete</h1>
+    <p>Täytä työn tiedot helposti puhelimella ja lähetä suoraan WhatsAppilla laboratorioon!</p>
+  </div>
+
+  <!-- 1. Tilaaja & Potilastunniste -->
+  <div class="m-card">
+    <div class="m-card-title">
+      <span>🏥 1. Vastaanotto &amp; Potilas</span>
+    </div>
+    <div>
+      <label class="m-label">Vastaanotto / Klinikka *</label>
+      <input type="text" id="m_clinic" class="m-input" placeholder="esim. Hammaslääkäriasema...">
+    </div>
+    <div style="display:flex; gap:8px;">
+      <div style="flex:1;">
+        <label class="m-label">Hammaslääkäri</label>
+        <input type="text" id="m_dentist" class="m-input" placeholder="Lääkärin nimi...">
+      </div>
+      <div style="flex:1;">
+        <label class="m-label">Puhelin / Yhteys</label>
+        <input type="text" id="m_contact" class="m-input" placeholder="Puhelinnumero...">
+      </div>
+    </div>
+    <div>
+      <label class="m-label" style="color:#0284c7;">
+        Potilastunniste * <span class="m-hint">(nimikirjaimet tai potilasnro, ei henkilötunnusta)</span>
+      </label>
+      <input type="text" id="m_patient" class="m-input" placeholder="esim. M.V. tai #4012" style="font-weight:700; border-color:#0284c7;">
+    </div>
+  </div>
+
+  <!-- 2. Työtyyppi -->
+  <div class="m-card">
+    <div class="m-card-title">
+      <span>🦷 2. Tilattava työtyyppi *</span>
+    </div>
+    <input type="hidden" id="m_work_type" value="Zirkonia (Kruunut/sillat)">
+    <div class="m-type-grid">
+      <div class="m-type-btn active" data-type="Zirkonia (Kruunut/sillat)" onclick="selectMobileType(this)">
+        <div class="m-type-icon">👑</div>
+        <div class="m-type-name">Zirkonia</div>
+        <div class="m-type-desc">Kruunut ja sillat</div>
+      </div>
+      <div class="m-type-btn" data-type="LiSi / e.max (Kruunut/laminaatit)" onclick="selectMobileType(this)">
+        <div class="m-type-icon">💎</div>
+        <div class="m-type-name">LiSi / e.max</div>
+        <div class="m-type-desc">Kruunut, laminaatit</div>
+      </div>
+      <div class="m-type-btn" data-type="Digiranka (Bego SLM)" onclick="selectMobileType(this)">
+        <div class="m-type-icon">⚙️</div>
+        <div class="m-type-name">Digiranka</div>
+        <div class="m-type-desc">Bego SLM / CoCr</div>
+      </div>
+      <div class="m-type-btn" data-type="Pohjaus / Korjaus" onclick="selectMobileType(this)">
+        <div class="m-type-icon">⚡</div>
+        <div class="m-type-name">Pohjaus / Korjaus</div>
+        <div class="m-type-desc">Pika-akryylityöt</div>
+      </div>
+      <div class="m-type-btn" data-type="Purentakisko (Erkodur/3D)" onclick="selectMobileType(this)">
+        <div class="m-type-icon">🛡️</div>
+        <div class="m-type-name">Purentakisko</div>
+        <div class="m-type-desc">Erkodur / 3D-kisko</div>
+      </div>
+      <div class="m-type-btn" data-type="Proteesi (Koko/osaproteesi)" onclick="selectMobileType(this)">
+        <div class="m-type-icon">🦿</div>
+        <div class="m-type-name">Proteesi</div>
+        <div class="m-type-desc">Koko- ja osaproteesi</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Hammaskartta -->
+  <div class="m-card">
+    <div class="m-card-title">
+      <span>🎯 3. Valitse hampaat (FDI)</span>
+      <span id="m-teeth-badge" style="font-size:0.8rem; font-weight:800; color:#0284c7;">(valitse alta)</span>
+    </div>
+    <div class="m-tooth-chart">
+      <div style="font-size:10px; font-weight:bold; color:#64748b; display:flex; justify-content:space-between; margin-bottom:4px; padding:0 4px;">
+        <span>OIKEA (Yläleuka 18–11)</span>
+        <span>(Vasen 21–28) VASEN</span>
+      </div>
+      <div class="m-tooth-row">
+        <div class="m-tooth-btn" data-tooth="18" onclick="toggleTooth(this)">18</div>
+        <div class="m-tooth-btn" data-tooth="17" onclick="toggleTooth(this)">17</div>
+        <div class="m-tooth-btn" data-tooth="16" onclick="toggleTooth(this)">16</div>
+        <div class="m-tooth-btn" data-tooth="15" onclick="toggleTooth(this)">15</div>
+        <div class="m-tooth-btn" data-tooth="14" onclick="toggleTooth(this)">14</div>
+        <div class="m-tooth-btn" data-tooth="13" onclick="toggleTooth(this)">13</div>
+        <div class="m-tooth-btn" data-tooth="12" onclick="toggleTooth(this)">12</div>
+        <div class="m-tooth-btn" data-tooth="11" onclick="toggleTooth(this)">11</div>
+        <div class="m-tooth-divider"></div>
+        <div class="m-tooth-btn" data-tooth="21" onclick="toggleTooth(this)">21</div>
+        <div class="m-tooth-btn" data-tooth="22" onclick="toggleTooth(this)">22</div>
+        <div class="m-tooth-btn" data-tooth="23" onclick="toggleTooth(this)">23</div>
+        <div class="m-tooth-btn" data-tooth="24" onclick="toggleTooth(this)">24</div>
+        <div class="m-tooth-btn" data-tooth="25" onclick="toggleTooth(this)">25</div>
+        <div class="m-tooth-btn" data-tooth="26" onclick="toggleTooth(this)">26</div>
+        <div class="m-tooth-btn" data-tooth="27" onclick="toggleTooth(this)">27</div>
+        <div class="m-tooth-btn" data-tooth="28" onclick="toggleTooth(this)">28</div>
+      </div>
+      <div style="font-size:10px; font-weight:bold; color:#64748b; display:flex; justify-content:space-between; margin:8px 0 4px; padding:0 4px;">
+        <span>OIKEA (Alaleuka 48–41)</span>
+        <span>(Vasen 31–38) VASEN</span>
+      </div>
+      <div class="m-tooth-row">
+        <div class="m-tooth-btn" data-tooth="48" onclick="toggleTooth(this)">48</div>
+        <div class="m-tooth-btn" data-tooth="47" onclick="toggleTooth(this)">47</div>
+        <div class="m-tooth-btn" data-tooth="46" onclick="toggleTooth(this)">46</div>
+        <div class="m-tooth-btn" data-tooth="45" onclick="toggleTooth(this)">45</div>
+        <div class="m-tooth-btn" data-tooth="44" onclick="toggleTooth(this)">44</div>
+        <div class="m-tooth-btn" data-tooth="43" onclick="toggleTooth(this)">43</div>
+        <div class="m-tooth-btn" data-tooth="42" onclick="toggleTooth(this)">42</div>
+        <div class="m-tooth-btn" data-tooth="41" onclick="toggleTooth(this)">41</div>
+        <div class="m-tooth-divider"></div>
+        <div class="m-tooth-btn" data-tooth="31" onclick="toggleTooth(this)">31</div>
+        <div class="m-tooth-btn" data-tooth="32" onclick="toggleTooth(this)">32</div>
+        <div class="m-tooth-btn" data-tooth="33" onclick="toggleTooth(this)">33</div>
+        <div class="m-tooth-btn" data-tooth="34" onclick="toggleTooth(this)">34</div>
+        <div class="m-tooth-btn" data-tooth="35" onclick="toggleTooth(this)">35</div>
+        <div class="m-tooth-btn" data-tooth="36" onclick="toggleTooth(this)">36</div>
+        <div class="m-tooth-btn" data-tooth="37" onclick="toggleTooth(this)">37</div>
+        <div class="m-tooth-btn" data-tooth="38" onclick="toggleTooth(this)">38</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Sävy -->
+  <div class="m-card">
+    <div class="m-card-title">
+      <span>🎨 4. Sävy (VITA)</span>
+    </div>
+    <input type="hidden" id="m_shade" value="A2">
+    <div class="m-shade-grid">
+      <div class="m-shade-pill" onclick="selectShade(this, 'A1')">A1</div>
+      <div class="m-shade-pill active" onclick="selectShade(this, 'A2')">A2</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'A3')">A3</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'A3.5')">A3.5</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'B1')">B1</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'B2')">B2</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'C1')">C1</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'D2')">D2</div>
+      <div class="m-shade-pill" onclick="selectShade(this, 'Bleach')">Bleach</div>
+    </div>
+    <div>
+      <input type="text" id="m_custom_shade" class="m-input" placeholder="Tai muu sävy / karakterisointi..." oninput="onCustomShade(this.value)">
+    </div>
+  </div>
+
+  <!-- 5. Aikataulu & Erityistoiveet -->
+  <div class="m-card">
+    <div class="m-card-title">
+      <span>📅 5. Aikataulu &amp; Erityistoiveet</span>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <div style="flex:1;">
+        <label class="m-label">Toivottu toimituspvm *</label>
+        <input type="date" id="m_date_due" class="m-input">
+      </div>
+      <div style="flex:1;">
+        <label class="m-label">Lähetyspvm</label>
+        <input type="date" id="m_date_sent" class="m-input">
+      </div>
+    </div>
+    <div>
+      <label class="m-label">Erityistoiveet laboratoriolle</label>
+      <textarea id="m_notes" class="m-textarea" placeholder="esim. purennan kevennys, kontaktitiukkuus, välivaiheet, materiaalitarkennus..."></textarea>
+    </div>
+  </div>
+
+  <!-- Toimintonapit -->
+  <button type="button" class="m-btn-wa-main" onclick="sendViaWhatsApp()">
+    <span style="font-size:1.3rem;">📲</span> Lähetä WhatsAppilla laboratorioon
+  </button>
+  <button type="button" class="m-btn-copy-main" onclick="copyOrderText()">
+    📋 Kopioi teksti leikepöydälle
+  </button>
+
+  <div style="text-align:center; font-size:0.75rem; color:#64748b; margin-top:20px; line-height:1.4;">
+    <strong>Hammaslaboratorio Neodent</strong><br>
+    Aninkaistenkatu 3 B 22, 20100 Turku · Y-tunnus 3487405-3<br>
+    Puh. <strong>045 121 5133</strong> · hammaslab@gmail.com
+  </div>
+</div>
+
+<script>
+var selectedTeeth = [];
+
+window.addEventListener('DOMContentLoaded', function() {
+  var todayStr = new Date().toISOString().split('T')[0];
+  var mSent = document.getElementById('m_date_sent');
+  if (mSent && !mSent.value) mSent.value = todayStr;
+});
+
+function toggleTooth(btn) {
+  var t = btn.getAttribute('data-tooth');
+  var idx = selectedTeeth.indexOf(t);
+  if (idx === -1) {
+    selectedTeeth.push(t);
+    btn.classList.add('selected');
+  } else {
+    selectedTeeth.splice(idx, 1);
+    btn.classList.remove('selected');
+  }
+  selectedTeeth.sort(function(a,b) { return parseInt(a,10) - parseInt(b,10); });
+  var badge = document.getElementById('m-teeth-badge');
+  if (badge) {
+    badge.textContent = selectedTeeth.length > 0 ? ('d.' + selectedTeeth.join(', ')) : '(valitse alta)';
+  }
+}
+
+function selectMobileType(el) {
+  document.querySelectorAll('.m-type-btn').forEach(function(b) { b.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('m_work_type').value = el.getAttribute('data-type');
+}
+
+function selectShade(el, shade) {
+  document.querySelectorAll('.m-shade-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('m_shade').value = shade;
+  document.getElementById('m_custom_shade').value = '';
+}
+
+function onCustomShade(val) {
+  if (val.trim()) {
+    document.querySelectorAll('.m-shade-pill').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('m_shade').value = val.trim();
+  }
+}
+
+function collectData() {
+  var clinic = (document.getElementById('m_clinic').value || '').trim();
+  var dentist = (document.getElementById('m_dentist').value || '').trim();
+  var contact = (document.getElementById('m_contact').value || '').trim();
+  var patient = (document.getElementById('m_patient').value || '').trim();
+  var dateSent = document.getElementById('m_date_sent').value || '';
+  var dateDue = document.getElementById('m_date_due').value || '';
+  var workType = document.getElementById('m_work_type').value || 'Zirkonia';
+  var shade = (document.getElementById('m_shade').value || 'A2').trim();
+  var notes = (document.getElementById('m_notes').value || '').trim();
+
+  return {
+    clinic: clinic,
+    dentist: dentist,
+    contact: contact,
+    patient: patient,
+    dateSent: dateSent,
+    dateDue: dateDue,
+    workType: workType,
+    shade: shade,
+    notes: notes,
+    teeth: selectedTeeth
+  };
+}
+
+function buildMessage(d) {
+  var msg = "🦷 *TYÖLÄHETE — Hammaslaboratorio Neodent*\n";
+  msg += "━━━━━━━━━━━━━━━━━━━━\n";
+
+  if (d.clinic) msg += "🏥 *Klinikka:* " + d.clinic + "\n";
+  if (d.dentist) msg += "👨‍⚕️ *Lääkäri:* " + d.dentist + "\n";
+  if (d.contact) msg += "📞 *Yhteys:* " + d.contact + "\n";
+
+  msg += "👤 *Potilastunniste:* " + (d.patient || "—") + "\n";
+  if (d.dateSent || d.dateDue) {
+    msg += "📅 *Aikataulu:* Lähetetty: " + (d.dateSent || "—") + " ➔ Toivottu: *" + (d.dateDue || "—") + "*\n";
+  }
+
+  msg += "👑 *Työtyyppi:* " + d.workType + "\n";
+  if (d.teeth.length > 0) {
+    msg += "🎯 *Hampaat (FDI):* d." + d.teeth.join(", ") + "\n";
+  }
+  if (d.shade) {
+    msg += "🎨 *Sävy:* " + d.shade + "\n";
+  }
+  if (d.notes) {
+    msg += "📝 *Huomiot:* " + d.notes + "\n";
+  }
+
+  msg += "━━━━━━━━━━━━━━━━━━━━\n";
+  msg += "Lähetetty Neodentin mobiililähetteen kautta.";
+  return msg;
+}
+
+function sendViaWhatsApp() {
+  var d = collectData();
+  if (!d.patient && !d.clinic) {
+    alert("Syötä vähintään potilastunniste tai klinikka ennen lähettämistä.");
+    document.getElementById('m_patient').focus();
+    return;
+  }
+  var text = buildMessage(d);
+  var phone = "358451215133";
+  var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+  window.open(url, "_blank");
+}
+
+function copyOrderText() {
+  var d = collectData();
+  var text = buildMessage(d);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert("✓ Lähetteen tiedot kopioitu leikepöydälle!");
+    }).catch(function() {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    alert("✓ Lähetteen tiedot kopioitu leikepöydälle!");
+  } catch (err) {
+    alert("Kopiointi ei onnistunut automaattisesti.");
+  }
+  document.body.removeChild(ta);
+}
+</script>
+
+</body>
+</html>
