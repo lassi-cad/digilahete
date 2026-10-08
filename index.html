@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Työlähete — Hammaslaboratorio Neodent</title>
+<style>
+  @page { size: A4 portrait; margin: 8mm 10mm 8mm; }
+  * { box-sizing: border-box; }
+  body { font-size: 8.5pt; line-height: 1.3; color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f8fafc; padding: 0; margin: 0; }
+  
+  /* Työkalupalkki näytöllä (piilotetaan tulostuksessa) */
+  .screen-toolbar {
+    background: #0f172a; color: #fff; padding: 10px 18px; position: sticky; top: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); flex-wrap: wrap; gap: 8px;
+  }
+  .screen-toolbar h3 { margin: 0; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .screen-toolbar .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .screen-toolbar button, .screen-toolbar a {
+    cursor: pointer; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.82rem; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+  .screen-toolbar button:active, .screen-toolbar a:active { transform: scale(0.98); }
+  .btn-whatsapp { background: #25D366; color: #fff; }
+  .btn-whatsapp:hover { background: #20ba59; }
+  .btn-copy { background: #0284c7; color: #fff; }
+  .btn-copy:hover { background: #0369a1; }
+  .btn-print { background: #16a34a; color: #fff; }
+  .btn-print:hover { background: #15803d; }
+  .btn-clear { background: #334155; color: #cbd5e1; }
+  .btn-clear:hover { background: #475569; color: #fff; }
+
+  /* A4-paperisivun wrapperi näytöllä */
+  .a4-page {
+    width: 210mm; min-height: 297mm; padding: 10mm 12mm; margin: 15px auto; background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 4px;
+  }
+
+  .head { border-bottom: 1.5pt solid #0284c7; padding-bottom: 2mm; margin-bottom: 2.5mm; }
+  .head h1 { font-size: 14pt; margin: 0; color: #0284c7; font-weight: 800; letter-spacing: -0.3pt; }
+  .head .lab { font-size: 9.5pt; font-weight: bold; color: #0f172a; }
+  .cols { display: flex; gap: 5mm; margin-bottom: 2.5mm; }
+  .cols > div { flex: 1; }
+  h2 { font-size: 7.8pt; margin: 2mm 0 1mm; padding-bottom: 0.8mm; border-bottom: 0.6pt solid #cbd5e1; text-transform: uppercase; letter-spacing: 0.5pt; color: #0369a1; font-weight: 800; }
+  .box { border: 0.6pt solid #cbd5e1; border-radius: 1.5mm; padding: 2.2mm 2.8mm; background: #fff; }
+  
+  /* Lomake-elementit */
+  input[type="text"], input[type="date"], select, textarea {
+    font-family: inherit; font-size: 8pt; color: #0f172a; border: 0.5pt solid #cbd5e1;
+    border-radius: 1mm; padding: 1.5mm 2mm; width: 100%; background: #fff;
+  }
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: #0284c7; outline: none; background: #f0f9ff;
+  }
+
+  /* Hammaskartta */
+  .tooth-chart { margin: 1mm 0 2mm; border: 0.6pt solid #cbd5e1; border-radius: 1.5mm; padding: 2mm; background: #f8fafc; }
+  .tooth-row { display: flex; gap: 1.5mm; justify-content: center; align-items: center; }
+  .tooth-btn {
+    border: 0.8pt solid #94a3b8; width: 6.2mm; height: 6.2mm; display: flex; align-items: center; justify-content: center;
+    font-size: 7.5pt; font-weight: 800; font-family: monospace; background: #fff; color: #334155; border-radius: 1mm;
+    cursor: pointer; user-select: none; transition: all 0.1s;
+  }
+  .tooth-btn.selected {
+    background: #0284c7; color: #fff; border-color: #0369a1; box-shadow: 0 1px 3px rgba(2,132,199,0.4);
+  }
+  .divider-v { border-right: 1.5pt solid #0f172a; height: 6.5mm; margin: 0 2.5mm; }
+  .divider-h { border-top: 1.5pt solid #0f172a; margin: 1.5mm 0; }
+
+  /* Checkbox-ruudukko */
+  .checkbox-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5mm 2mm; font-size: 7.5pt; }
+  .cb-item { display: flex; align-items: center; gap: 1.8mm; cursor: pointer; }
+  .cb-item input[type="checkbox"] { width: 3.5mm; height: 3.5mm; margin: 0; cursor: pointer; }
+
+  /* Taulukko */
+  table.line-table { width: 100%; border-collapse: collapse; font-size: 7.8pt; margin-bottom: 1.5mm; }
+  table.line-table th { font-size: 7pt; padding: 1mm 1.5mm; border-bottom: 0.8pt solid #64748b; background: #f1f5f9; text-align: left; }
+  table.line-table td { padding: 1.2mm 1.5mm; border-bottom: 0.4pt solid #e2e8f0; vertical-align: middle; }
+
+  .decl { font-size: 6.5pt; line-height: 1.3; color: #475569; border: 0.5pt solid #cbd5e1; border-radius: 1mm; padding: 1.8mm 2.2mm; background: #f8fafc; margin-top: 2mm; }
+  .sign { margin-top: 3.5mm; display: flex; gap: 8mm; }
+  .sign div { flex: 1; border-top: 0.5pt solid #64748b; padding-top: 1mm; font-size: 7pt; color: #475569; }
+  .foot { font-size: 6.5pt; color: #64748b; text-align: center; margin-top: 2mm; }
+
+  /* Alaosan WhatsApp-toimintopalkki näytöllä */
+  .screen-bottom-actions {
+    max-width: 210mm; margin: 10px auto 40px; padding: 14px 18px; background: #ffffff;
+    border-radius: 10px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .screen-bottom-actions .btn-main-wa {
+    background: #25D366; color: #fff; padding: 10px 22px; border-radius: 8px; font-weight: 800; font-size: 0.95rem;
+    border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(37,211,102,0.3);
+  }
+  .screen-bottom-actions .btn-main-wa:hover { background: #20ba59; }
+
+  /* Tulostusmuotoilu */
+  @media print {
+    body { background: #fff; }
+    .screen-toolbar, .screen-bottom-actions { display: none !important; }
+    .a4-page { width: 100%; margin: 0; padding: 0; box-shadow: none; border: none; }
+    input[type="text"], input[type="date"], select, textarea {
+      border: none !important; background: transparent !important; padding: 0 !important; font-size: 8.5pt !important;
+    }
+    select { -webkit-appearance: none; appearance: none; }
+    .tooth-btn.selected { background: #000 !important; color: #fff !important; border-color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .tooth-btn:not(.selected) { border-color: #cbd5e1 !important; color: #94a3b8 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-toolbar">
+  <h3>
+    <span>🦷</span> Hammaslaboratorio Neodent — Digitaalinen työlähete
+  </h3>
+  <div class="actions">
+    <button type="button" class="btn-whatsapp" onclick="sendViaWhatsApp()" title="Avaa WhatsApp ja lähetä täytetty lähete suoraan laboratoriolle">
+      📲 Lähetä WhatsAppilla
+    </button>
+    <button type="button" class="btn-copy" onclick="copyOrderText()" title="Kopioi lähetteen tiedot leikepöydälle">
+      📋 Kopioi teksti
+    </button>
+    <button type="button" class="btn-print" onclick="window.print()" title="Tulosta A4-paperilähete kuljetuslaatikkoon">
+      🖨️ Tulosta (A4)
+    </button>
+    <button type="button" class="btn-clear" onclick="clearForm()">
+      🧹 Tyhjennä
+    </button>
+  </div>
+</div>
+
+<div class="a4-page">
+  <div class="head">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <div style="font-size:7.5pt; color:#0369a1; font-weight:800; letter-spacing:0.5pt;">HAMMASLABORATORIO NEODENT</div>
+        <h1>TYÖLÄHETE / TILAUSLOMAKE</h1>
+        <div style="font-size:7pt; color:#64748b; line-height:1.3;">
+          Liitetään työn ja jäljennösten / mallien mukaan &nbsp;·&nbsp;
+          <span style="color:#b91c1c; font-weight:bold;">Älä ilmoita potilaan nimeä (vain tunnistekoodi, MDR liite XIII)</span>
+        </div>
+      </div>
+      <div style="text-align:right; font-size:7.5pt; color:#334155; line-height:1.35;">
+        <div class="lab">Hammaslaboratorio Neodent</div>
+        Aninkaistenkatu 3 B 22, 20100 Turku · Y-tunnus 3487405-3<br>
+        Puh: 045 121 5133 · hammaslab@gmail.com
+      </div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div>
+      <h2>1. Tilaaja (Klinikka ja hammaslääkäri)</h2>
+      <div class="box" style="height:25mm;">
+        <div style="display:flex; flex-direction:column; gap:1.5mm;">
+          <input type="text" id="inp_clinic" placeholder="Vastaanoton nimi (esim. Hammaslääkäriasema Oy)..." style="font-weight:700;">
+          <input type="text" id="inp_dentist" placeholder="Hammaslääkärin nimi...">
+          <input type="text" id="inp_contact" placeholder="Puhelinnumero tai sähköposti...">
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>2. Työn perustiedot</h2>
+      <div class="box" style="height:25mm; padding:2mm 3mm;">
+        <div style="display:flex; align-items:center; gap:2mm; margin-bottom:1.5mm;">
+          <label style="font-weight:800; font-size:7.5pt; color:#0f172a; white-space:nowrap; width:28mm;">Potilastunniste:</label>
+          <input type="text" id="inp_patient" placeholder="esim. M.V. tai 1042 (ei henkilötunnusta)" style="font-weight:700; flex:1;">
+        </div>
+        <div style="display:flex; gap:2mm; margin-bottom:1.5mm;">
+          <div style="flex:1; display:flex; align-items:center; gap:1.5mm;">
+            <label style="font-size:7pt; color:#475569; white-space:nowrap;">Lähetetty:</label>
+            <input type="date" id="inp_date_sent">
+          </div>
+          <div style="flex:1; display:flex; align-items:center; gap:1.5mm;">
+            <label style="font-size:7pt; color:#0369a1; font-weight:700; white-space:nowrap;">Toivottu:</label>
+            <input type="date" id="inp_date_due" style="font-weight:700; border-color:#93c5fd;">
+          </div>
+        </div>
+        <div style="font-size:7pt; color:#334155; display:flex; gap:3mm; align-items:center;">
+          <strong style="color:#0369a1;">Päätyyppi:</strong>
+          <label class="cb-item"><input type="checkbox" name="ptype" value="Digi"> Digi / CAD</label>
+          <label class="cb-item"><input type="checkbox" name="ptype" value="Kruunu/Silta" checked> Kruunu/Silta</label>
+          <label class="cb-item"><input type="checkbox" name="ptype" value="Proteesi"> Proteesi</label>
+          <label class="cb-item"><input type="checkbox" name="ptype" value="Ranka"> Ranka</label>
+          <label class="cb-item"><input type="checkbox" name="ptype" value="Kisko"> Kisko</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>3. Hammaskaavio (FDI) — Napauta käsiteltäviä hampaita</h2>
+  <div class="tooth-chart">
+    <div style="display:flex; justify-content:space-between; font-size:6.5pt; color:#64748b; font-weight:bold; margin-bottom:0.8mm;">
+      <span>OIKEA (Yläleuka 18–11)</span>
+      <span id="teeth_summary_badge" style="color:#0284c7; font-weight:800; font-size:7pt;">Valitut hampaat: (ei valittu)</span>
+      <span>(Vasen 21–28) VASEN</span>
+    </div>
+    <div class="tooth-row">
+      <div class="tooth-btn" data-tooth="18" onclick="toggleTooth(this)">18</div>
+      <div class="tooth-btn" data-tooth="17" onclick="toggleTooth(this)">17</div>
+      <div class="tooth-btn" data-tooth="16" onclick="toggleTooth(this)">16</div>
+      <div class="tooth-btn" data-tooth="15" onclick="toggleTooth(this)">15</div>
+      <div class="tooth-btn" data-tooth="14" onclick="toggleTooth(this)">14</div>
+      <div class="tooth-btn" data-tooth="13" onclick="toggleTooth(this)">13</div>
+      <div class="tooth-btn" data-tooth="12" onclick="toggleTooth(this)">12</div>
+      <div class="tooth-btn" data-tooth="11" onclick="toggleTooth(this)">11</div>
+      <div class="divider-v"></div>
+      <div class="tooth-btn" data-tooth="21" onclick="toggleTooth(this)">21</div>
+      <div class="tooth-btn" data-tooth="22" onclick="toggleTooth(this)">22</div>
+      <div class="tooth-btn" data-tooth="23" onclick="toggleTooth(this)">23</div>
+      <div class="tooth-btn" data-tooth="24" onclick="toggleTooth(this)">24</div>
+      <div class="tooth-btn" data-tooth="25" onclick="toggleTooth(this)">25</div>
+      <div class="tooth-btn" data-tooth="26" onclick="toggleTooth(this)">26</div>
+      <div class="tooth-btn" data-tooth="27" onclick="toggleTooth(this)">27</div>
+      <div class="tooth-btn" data-tooth="28" onclick="toggleTooth(this)">28</div>
+    </div>
+    <div class="divider-h"></div>
+    <div class="tooth-row">
+      <div class="tooth-btn" data-tooth="48" onclick="toggleTooth(this)">48</div>
+      <div class="tooth-btn" data-tooth="47" onclick="toggleTooth(this)">47</div>
+      <div class="tooth-btn" data-tooth="46" onclick="toggleTooth(this)">46</div>
+      <div class="tooth-btn" data-tooth="45" onclick="toggleTooth(this)">45</div>
+      <div class="tooth-btn" data-tooth="44" onclick="toggleTooth(this)">44</div>
+      <div class="tooth-btn" data-tooth="43" onclick="toggleTooth(this)">43</div>
+      <div class="tooth-btn" data-tooth="42" onclick="toggleTooth(this)">42</div>
+      <div class="tooth-btn" data-tooth="41" onclick="toggleTooth(this)">41</div>
+      <div class="divider-v"></div>
+      <div class="tooth-btn" data-tooth="31" onclick="toggleTooth(this)">31</div>
+      <div class="tooth-btn" data-tooth="32" onclick="toggleTooth(this)">32</div>
+      <div class="tooth-btn" data-tooth="33" onclick="toggleTooth(this)">33</div>
+      <div class="tooth-btn" data-tooth="34" onclick="toggleTooth(this)">34</div>
+      <div class="tooth-btn" data-tooth="35" onclick="toggleTooth(this)">35</div>
+      <div class="tooth-btn" data-tooth="36" onclick="toggleTooth(this)">36</div>
+      <div class="tooth-btn" data-tooth="37" onclick="toggleTooth(this)">37</div>
+      <div class="tooth-btn" data-tooth="38" onclick="toggleTooth(this)">38</div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:6.5pt; color:#64748b; font-weight:bold; margin-top:0.8mm;">
+      <span>OIKEA (Alaleuka 48–41)</span>
+      <span>(Vasen 31–38) VASEN</span>
+    </div>
+  </div>
+
+  <h2>4. Tilattavat työt, materiaalit ja toimenpiteet</h2>
+  <div style="display:flex; gap:3mm; align-items:stretch; margin-bottom:1.5mm;">
+    <div style="flex:1; min-width:0;">
+      <table class="line-table">
+        <thead>
+          <tr>
+            <th style="width:42%">Tuote / Työ</th>
+            <th style="width:16%">Hammas</th>
+            <th style="width:10%">Kpl</th>
+            <th style="width:32%">Materiaali / Tarkennus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="line-row">
+            <td><input type="text" class="line-name" placeholder="esim. Zirkoniakruunu FCZ" style="font-weight:700;"></td>
+            <td><input type="text" class="row-teeth-sync line-tooth" placeholder="esim. d.11"></td>
+            <td><input type="text" class="line-qty" value="1" style="text-align:center;"></td>
+            <td>
+              <select class="line-mat">
+                <option value="NexxZr T Multi">NexxZr T Multi (Zirkonia)</option>
+                <option value="Katana Zirkonia YML">Katana Zirkonia YML</option>
+                <option value="NexxZr Multi 850MPa">NexxZr Multi 850MPa</option>
+                <option value="LiSi / e.max">LiSi / e.max litiumdisilikaatti</option>
+                <option value="Bego Medical runko">Bego Medical runko (CoCr)</option>
+                <option value="Pohjaus (ProBase)">Pohjaus (ProBase Cold)</option>
+                <option value="Purentakisko">Purentakisko (Erkodur / 3D)</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="line-row">
+            <td><input type="text" class="line-name" placeholder="Rivi 2 (valinnainen)..."></td>
+            <td><input type="text" class="line-tooth"></td>
+            <td><input type="text" class="line-qty" style="text-align:center;"></td>
+            <td><input type="text" class="line-mat" placeholder="Materiaali..."></td>
+          </tr>
+          <tr class="line-row">
+            <td><input type="text" class="line-name" placeholder="Rivi 3 (valinnainen)..."></td>
+            <td><input type="text" class="line-tooth"></td>
+            <td><input type="text" class="line-qty" style="text-align:center;"></td>
+            <td><input type="text" class="line-mat" placeholder="Materiaali..."></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Välivaiheet & Aikataulu -->
+    <div class="box" style="width:64mm; flex-shrink:0; padding:2mm;">
+      <div style="font-size:7pt; font-weight:800; color:#0f172a; text-transform:uppercase; border-bottom:0.5pt solid #cbd5e1; padding-bottom:1mm; margin-bottom:1mm; display:flex; justify-content:space-between;">
+        <span>Välivaiheet / Aikataulu</span>
+        <span style="font-size:6pt; color:#64748b;">Pvm &amp; klo</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:1.2mm;">
+        <div style="display:flex; align-items:center; gap:1.5mm; font-size:7pt;">
+          <span style="font-weight:700; width:18mm;">1. Sovitus:</span>
+          <input type="text" id="inp_step_sovitus" placeholder="Pvm & klo..." style="font-size:7pt; padding:1mm;">
+        </div>
+        <div style="display:flex; align-items:center; gap:1.5mm; font-size:7pt;">
+          <span style="font-weight:700; width:18mm;">2. Runko:</span>
+          <input type="text" id="inp_step_runko" placeholder="Pvm & klo..." style="font-size:7pt; padding:1mm;">
+        </div>
+        <div style="display:flex; align-items:center; gap:1.5mm; font-size:7pt; border-top:0.5pt solid #cbd5e1; padding-top:1mm;">
+          <strong style="width:18mm; color:#0284c7;">Valmis:</strong>
+          <input type="text" id="inp_step_valmis" placeholder="Pvm & klo..." style="font-size:7pt; padding:1mm; font-weight:700;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div>
+      <h2>5. Sävy ja estetiikka</h2>
+      <div class="box" style="height:24mm;">
+        <div style="display:flex; gap:2mm; margin-bottom:1.5mm;">
+          <div style="flex:1;">
+            <label style="font-size:6.8pt; color:#475569; font-weight:700;">Sävy (Shade):</label>
+            <select id="inp_shade" style="font-weight:700;">
+              <option value="A2" selected>A2</option>
+              <option value="A1">A1</option>
+              <option value="A3">A3</option>
+              <option value="A3.5">A3.5</option>
+              <option value="A4">A4</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="B3">B3</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+              <option value="D2">D2</option>
+              <option value="Bleach">Bleach / Vaalea</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:6.8pt; color:#475569; font-weight:700;">Asteikko:</label>
+            <select id="inp_shade_scale">
+              <option value="VITA Classical">VITA Classical</option>
+              <option value="VITA 3D-Master">VITA 3D-Master</option>
+              <option value="Chromascop">Chromascop</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; gap:2mm; flex-wrap:wrap; font-size:6.8pt; color:#334155;">
+          <label class="cb-item"><input type="checkbox" name="shade_opt" value="Sävy ennen prep."> Sävy ennen prep.</label>
+          <label class="cb-item"><input type="checkbox" name="shade_opt" value="Esteett. vaativa"> Esteett. vaativa</label>
+          <label class="cb-item"><input type="checkbox" name="shade_opt" value="Zirkoniapurupinta"> Zirkoniapurupinta</label>
+          <label class="cb-item"><input type="checkbox" name="shade_opt" value="Pinteet piiloon"> Pinteet piiloon</label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>6. Implantti ja kiinnitys</h2>
+      <div class="box" style="height:24mm;">
+        <div style="display:flex; gap:2mm; margin-bottom:1.5mm;">
+          <div style="flex:1;">
+            <label style="font-size:6.8pt; color:#475569; font-weight:700;">Implanttimerkki:</label>
+            <input type="text" id="inp_implant_brand" placeholder="esim. Straumann, Astra, Conelog...">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:6.8pt; color:#475569; font-weight:700;">Alusta / Koko:</label>
+            <input type="text" id="inp_implant_size" placeholder="esim. RC / NC / Ø 4.3...">
+          </div>
+        </div>
+        <div style="font-size:6.8pt; color:#334155;">
+          <label class="cb-item"><input type="checkbox" id="inp_implant_original" checked> Valmistajan alkuperäisosat käytössä</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>7. Mukana toimitettu aineisto</h2>
+  <div class="checkbox-grid" style="margin-bottom:2mm;">
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Jäljennös" checked> Jäljennös</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Kipsimalli"> Kipsimalli</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="STL / Digijäljennös"> STL / Digijäljennös</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Purentaindeksi"> Purentaindeksi</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Vastapurija"> Vastapurija</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Vanha proteesi"> Vanha proteesi</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Värimalli / Kuvat"> Värimalli / Kuvat</label>
+    <label class="cb-item"><input type="checkbox" name="enclosed_opt" value="Implanttiosat"> Implanttiosat</label>
+  </div>
+
+  <h2>8. Huomiot ja erityistoiveet laboratoriolle</h2>
+  <div class="box" style="height:14mm; padding:1.5mm 2mm;">
+    <textarea id="inp_notes" placeholder="Kirjoita vapaat toiveet (esim. purennan kevennys, kontaktitiukkuus, esteettiset toiveet)..." style="width:100%; height:10mm; border:none; resize:none; font-size:7.5pt;"></textarea>
+  </div>
+
+  <div class="decl">
+    <strong>Vakuutus vaatimustenmukaisuudesta (MDR 2017/745, liite XIII):</strong>
+    Tämä hammastekninen työ on yksilölliseen käyttöön valmistettu mittatilaustyö potilaalle hammaslääkärin määräyksen mukaisesti. Täyttää liitteen I olennaiset turvallisuus- ja suorituskykyvaatimukset.
+  </div>
+
+  <div class="sign">
+    <div>Tilaajan allekirjoitus / Leima</div>
+    <div>Laboratorion vastaanottokuittaus ja pvm</div>
+  </div>
+
+  <div class="foot">
+    Hammaslaboratorio Neodent · Aninkaistenkatu 3 B 22, 20100 Turku · Y-tunnus 3487405-3 · Puh 045 121 5133 · hammaslab@gmail.com
+  </div>
+</div>
+
+<!-- Näytöllä näkyvä toimintopalkki sivun alla -->
+<div class="screen-bottom-actions">
+  <div>
+    <strong style="font-size:0.95rem; color:#0f172a; display:block;">Valmis lähetettäväksi?</strong>
+    <span style="font-size:0.8rem; color:#64748b;">Lähetä tiedot suoraan Neodentin WhatsAppiin tai tulosta laatikkoon.</span>
+  </div>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+    <button type="button" class="btn-main-wa" onclick="sendViaWhatsApp()">
+      📲 Lähetä WhatsAppilla
+    </button>
+    <button type="button" class="btn-copy" style="padding:10px 16px; font-size:0.88rem;" onclick="copyOrderText()">
+      📋 Kopioi teksti
+    </button>
+    <button type="button" class="btn-print" style="padding:10px 16px; font-size:0.88rem;" onclick="window.print()">
+      🖨️ Tulosta A4
+    </button>
+  </div>
+</div>
+
+<script>
+try {
+  var d = new Date();
+  var todayStr = d.toISOString().split('T')[0];
+  var inpSent = document.getElementById('inp_date_sent');
+  if (inpSent && !inpSent.value) inpSent.value = todayStr;
+} catch(e) {}
+
+var selectedTeeth = [];
+
+function toggleTooth(btn) {
+  var t = btn.getAttribute('data-tooth');
+  var idx = selectedTeeth.indexOf(t);
+  if (idx === -1) {
+    selectedTeeth.push(t);
+    btn.classList.add('selected');
+  } else {
+    selectedTeeth.splice(idx, 1);
+    btn.classList.remove('selected');
+  }
+  selectedTeeth.sort(function(a,b) { return parseInt(a,10) - parseInt(b,10); });
+  
+  var badge = document.getElementById('teeth_summary_badge');
+  if (badge) {
+    badge.textContent = selectedTeeth.length > 0 ? ('Valitut hampaat: d.' + selectedTeeth.join(', ')) : 'Valitut hampaat: (ei valittu)';
+  }
+  
+  // Päivitä myös taulukon ensimmäiselle riville
+  var firstRowSync = document.querySelector('.row-teeth-sync');
+  if (firstRowSync) {
+    firstRowSync.value = selectedTeeth.length > 0 ? ('d.' + selectedTeeth.join(',')) : '';
+  }
+}
+
+function clearForm() {
+  if (!confirm('Haluatko varmasti tyhjentää lähetelomakkeen kentät?')) return;
+  document.querySelectorAll('.tooth-btn').forEach(function(b) { b.classList.remove('selected'); });
+  selectedTeeth = [];
+  var badge = document.getElementById('teeth_summary_badge');
+  if (badge) badge.textContent = 'Valitut hampaat: (ei valittu)';
+  document.querySelectorAll('input[type="text"], textarea').forEach(function(i) {
+    i.value = '';
+  });
+}
+
+function getLabWhatsAppNumber() {
+  return '358451215133'; // Hammaslaboratorio Neodent
+}
+
+function collectOrderData() {
+  var clinic = (document.getElementById('inp_clinic') ? document.getElementById('inp_clinic').value : '').trim();
+  var dentist = (document.getElementById('inp_dentist') ? document.getElementById('inp_dentist').value : '').trim();
+  var contact = (document.getElementById('inp_contact') ? document.getElementById('inp_contact').value : '').trim();
+  var patient = (document.getElementById('inp_patient') ? document.getElementById('inp_patient').value : '').trim();
+  var dateSent = (document.getElementById('inp_date_sent') ? document.getElementById('inp_date_sent').value : '').trim();
+  var dateDue = (document.getElementById('inp_date_due') ? document.getElementById('inp_date_due').value : '').trim();
+
+  // Päätyypit
+  var ptypes = [];
+  document.querySelectorAll('input[name="ptype"]:checked').forEach(function(cb) { ptypes.push(cb.value); });
+
+  // Rivilista
+  var lines = [];
+  document.querySelectorAll('.line-row').forEach(function(tr) {
+    var name = (tr.querySelector('.line-name') ? tr.querySelector('.line-name').value : '').trim();
+    var tooth = (tr.querySelector('.line-tooth') ? tr.querySelector('.line-tooth').value : '').trim();
+    var qty = (tr.querySelector('.line-qty') ? tr.querySelector('.line-qty').value : '').trim();
+    var mat = (tr.querySelector('.line-mat') ? tr.querySelector('.line-mat').value : '').trim();
+    if (name || tooth) {
+      lines.push({ name: name || 'Työ', tooth: tooth, qty: qty || '1', mat: mat });
+    }
+  });
+
+  // Välivaiheet
+  var stepSovitus = (document.getElementById('inp_step_sovitus') ? document.getElementById('inp_step_sovitus').value : '').trim();
+  var stepRunko = (document.getElementById('inp_step_runko') ? document.getElementById('inp_step_runko').value : '').trim();
+  var stepValmis = (document.getElementById('inp_step_valmis') ? document.getElementById('inp_step_valmis').value : '').trim();
+
+  // Sävy
+  var shade = (document.getElementById('inp_shade') ? document.getElementById('inp_shade').value : '').trim();
+  var shadeScale = (document.getElementById('inp_shade_scale') ? document.getElementById('inp_shade_scale').value : '').trim();
+  var shadeOpts = [];
+  document.querySelectorAll('input[name="shade_opt"]:checked').forEach(function(cb) { shadeOpts.push(cb.value); });
+
+  // Implantti
+  var implantBrand = (document.getElementById('inp_implant_brand') ? document.getElementById('inp_implant_brand').value : '').trim();
+  var implantSize = (document.getElementById('inp_implant_size') ? document.getElementById('inp_implant_size').value : '').trim();
+  var implantOrig = document.getElementById('inp_implant_original') && document.getElementById('inp_implant_original').checked;
+
+  // Aineisto
+  var enclosed = [];
+  document.querySelectorAll('input[name="enclosed_opt"]:checked').forEach(function(cb) { enclosed.push(cb.value); });
+
+  // Huomiot
+  var notes = (document.getElementById('inp_notes') ? document.getElementById('inp_notes').value : '').trim();
+
+  return {
+    clinic: clinic,
+    dentist: dentist,
+    contact: contact,
+    patient: patient,
+    dateSent: dateSent,
+    dateDue: dateDue,
+    ptypes: ptypes,
+    teeth: selectedTeeth,
+    lines: lines,
+    stepSovitus: stepSovitus,
+    stepRunko: stepRunko,
+    stepValmis: stepValmis,
+    shade: shade,
+    shadeScale: shadeScale,
+    shadeOpts: shadeOpts,
+    implantBrand: implantBrand,
+    implantSize: implantSize,
+    implantOrig: implantOrig,
+    enclosed: enclosed,
+    notes: notes
+  };
+}
+
+function buildOrderMessage(d) {
+  var msg = "🦷 *UUSI TYÖLÄHETE — Hammaslaboratorio Neodent*\n";
+  msg += "━━━━━━━━━━━━━━━━━━━━\n";
+  
+  // 1. Tilaaja
+  var orderer = d.clinic || "Tilaaja";
+  if (d.dentist) orderer += " (" + d.dentist + ")";
+  msg += "🏥 *Klinikka:* " + orderer + "\n";
+  if (d.contact) msg += "📞 *Yhteys:* " + d.contact + "\n";
+
+  // 2. Potilastunniste & pvm
+  msg += "👤 *Potilastunniste:* " + (d.patient || "—") + "\n";
+  if (d.dateSent || d.dateDue) {
+    msg += "📅 *Aikataulu:* Lähetetty: " + (d.dateSent || "—") + " ➔ Toivottu: *" + (d.dateDue || "—") + "*\n";
+  }
+
+  // 3. Päätyyppi & hampaat
+  if (d.ptypes.length > 0) {
+    msg += "⚙️ *Päätyyppi:* " + d.ptypes.join(", ") + "\n";
+  }
+  if (d.teeth.length > 0) {
+    msg += "🎯 *Hampaat (FDI):* d." + d.teeth.join(", ") + "\n";
+  }
+
+  // 4. Tilattavat rivit
+  if (d.lines.length > 0) {
+    msg += "\n📦 *TILATTAVAT TYÖT & MATERIAALIT:*\n";
+    d.lines.forEach(function(l) {
+      var item = "• *" + l.name + "*";
+      if (l.tooth) item += " (" + l.tooth + ")";
+      if (l.qty && l.qty !== "1") item += " × " + l.qty + " kpl";
+      if (l.mat) item += " — _" + l.mat + "_";
+      msg += item + "\n";
+    });
+  }
+
+  // 5. Sävy
+  if (d.shade) {
+    var shadeStr = d.shade + " (" + d.shadeScale + ")";
+    if (d.shadeOpts.length > 0) shadeStr += " [" + d.shadeOpts.join(", ") + "]";
+    msg += "\n🎨 *Sävy:* " + shadeStr + "\n";
+  }
+
+  // 6. Implantti
+  if (d.implantBrand || d.implantSize) {
+    var impStr = (d.implantBrand || "") + " " + (d.implantSize || "");
+    if (d.implantOrig) impStr += " (Alkuperäisosat)";
+    msg += "🔩 *Implantti:* " + impStr.trim() + "\n";
+  }
+
+  // 7. Välivaiheet
+  if (d.stepSovitus || d.stepRunko || d.stepValmis) {
+    msg += "\n⏱️ *Välivaiheet:*\n";
+    if (d.stepSovitus) msg += "  - 1. Sovitus: " + d.stepSovitus + "\n";
+    if (d.stepRunko) msg += "  - 2. Runko: " + d.stepRunko + "\n";
+    if (d.stepValmis) msg += "  - Valmis: " + d.stepValmis + "\n";
+  }
+
+  // 8. Aineisto
+  if (d.enclosed.length > 0) {
+    msg += "\n📋 *Mukana toimitettu:* " + d.enclosed.join(", ") + "\n";
+  }
+
+  // 9. Huomiot
+  if (d.notes) {
+    msg += "\n📝 *Erityistoiveet:* " + d.notes + "\n";
+  }
+
+  msg += "━━━━━━━━━━━━━━━━━━━━\n";
+  msg += "MDR 2017/745 Liite XIII yksilöllinen mittatilaustyö.";
+  return msg;
+}
+
+function sendViaWhatsApp() {
+  var data = collectOrderData();
+  if (!data.patient && !data.clinic && data.lines.length === 0) {
+    if (!confirm("Lähetelomake näyttää tyhjältä. Haluatko silti avata WhatsAppin?")) return;
+  }
+  
+  var text = buildOrderMessage(data);
+  var phone = getLabWhatsAppNumber();
+  var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+  window.open(url, "_blank");
+}
+
+function copyOrderText() {
+  var data = collectOrderData();
+  var text = buildOrderMessage(data);
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert("✓ Lähetteen tiedot kopioitu leikepöydälle! Voit nyt liittää (Ctrl+V) ne WhatsAppiin, sähköpostiin tai viestiin.");
+    }).catch(function() {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    alert("✓ Lähetteen tiedot kopioitu leikepöydälle!");
+  } catch (err) {
+    alert("Tekstin kopiointi ei onnistunut automaattisesti.");
+  }
+  document.body.removeChild(ta);
+}
+</script>
+
+</body>
+</html>
