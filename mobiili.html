@@ -6,144 +6,155 @@
 <title>Mobiilityölähete — Hammaslaboratorio Neodent</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  :root {
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --primary-light: #f0f9ff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --bg-page: #f8fafc;
+    --border-color: #e2e8f0;
+    --success-bg: #16a34a;
+    --success-hover: #15803d;
+  }
+
   body {
-    font-size: 15px; line-height: 1.35; color: #0f172a;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #f1f5f9; padding: 0; margin: 0;
+    font-size: 15px; line-height: 1.4; color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg-page); padding: 0; margin: 0;
   }
   
-  /* Työkalupalkki */
   .screen-toolbar {
-    background: #0f172a; color: #fff; padding: 10px 16px; position: sticky; top: 0; z-index: 1000;
-    display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    background: #0f172a; color: #fff; padding: 12px 18px; position: sticky; top: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(15,23,42,0.15);
   }
-  .toolbar-brand { display: flex; align-items: center; gap: 8px; }
-  .toolbar-brand h3 { margin: 0; font-size: 0.95rem; font-weight: 800; color: #f8fafc; }
+  .toolbar-brand { display: flex; flex-direction: column; }
+  .toolbar-brand h3 { margin: 0; font-size: 0.95rem; font-weight: 700; color: #f8fafc; text-transform: uppercase; letter-spacing: -0.2px; }
+  .toolbar-brand span { font-size: 0.72rem; color: #94a3b8; }
   
   .btn-wa-top {
-    background: #25D366; color: #fff; padding: 7px 14px; border-radius: 6px; font-weight: 800; font-size: 0.82rem;
-    border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    background: var(--success-bg); color: #fff; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 0.82rem;
+    border: none; cursor: pointer; display: inline-flex; align-items: center; text-decoration: none;
   }
-  .btn-wa-top:hover { background: #20ba59; }
+  .btn-wa-top:hover { background: var(--success-hover); }
 
-  .m-container { max-width: 600px; margin: 0 auto; padding: 14px 12px 60px; font-size: 15px; }
+  .m-container { max-width: 580px; margin: 0 auto; padding: 16px 14px 60px; font-size: 15px; }
 
-  .m-hero {
-    background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 16px 18px;
-    border-radius: 14px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(2,132,199,0.25);
+  .m-header-card {
+    background: #ffffff; border: 1px solid var(--border-color); border-left: 4px solid var(--primary);
+    padding: 16px 18px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
-  .m-hero-sub { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; opacity: 0.9; }
-  .m-hero h1 { font-size: 1.3rem; margin: 4px 0 4px 0; font-weight: 800; }
-  .m-hero p { margin: 0; font-size: 0.85rem; opacity: 0.95; line-height: 1.3; }
+  .m-header-sub { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; color: var(--primary); }
+  .m-header-card h1 { font-size: 1.25rem; margin: 2px 0 4px 0; font-weight: 700; color: var(--text-main); letter-spacing: -0.3px; }
+  .m-header-card p { margin: 0; font-size: 0.84rem; color: var(--text-muted); line-height: 1.4; }
 
   .m-card {
-    background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; padding: 14px 16px; margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #ffffff; border-radius: 8px; border: 1px solid var(--border-color); padding: 16px 18px; margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
   .m-card-title {
-    font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; display: flex;
-    align-items: center; justify-content: space-between; gap: 8px;
+    font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex;
+    align-items: center; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.4px;
+    padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;
   }
-  .m-label { display: block; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 4px; }
-  .m-hint { font-weight: normal; font-size: 0.74rem; color: #64748b; }
+  .m-label { display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 4px; }
+  .m-hint { font-weight: normal; font-size: 0.72rem; color: var(--text-muted); }
   
   .m-input, .m-select, .m-textarea {
     width: 100%; font-size: 16px !important;
-    padding: 10px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #fff;
-    box-sizing: border-box; font-family: inherit; color: #0f172a; margin-bottom: 8px;
+    padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff;
+    box-sizing: border-box; font-family: inherit; color: var(--text-main); margin-bottom: 10px;
   }
-  .m-input:focus, .m-select:focus, .m-textarea:focus { border-color: #0284c7; outline: none; background: #f0f9ff; }
-  .m-textarea { resize: vertical; min-height: 65px; }
+  .m-input:focus, .m-select:focus, .m-textarea:focus {
+    border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(2,132,199,0.12);
+  }
+  .m-textarea { resize: vertical; min-height: 70px; line-height: 1.4; }
 
-  /* Työtyypit */
-  .m-type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 4px; }
+  .m-type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 2px; }
   .m-type-btn {
-    border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer;
-    background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border: 1px solid var(--border-color); border-radius: 6px; padding: 12px 10px; text-align: left; cursor: pointer;
+    background: #f8fafc; display: flex; flex-direction: column; justify-content: center;
     transition: all 0.12s ease; user-select: none;
   }
-  .m-type-btn:active { transform: scale(0.98); }
+  .m-type-btn:active { transform: scale(0.99); }
   .m-type-btn.active {
-    border-color: #0284c7; background: #f0f9ff; box-shadow: 0 2px 8px rgba(2,132,199,0.22);
+    border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 0 1px var(--primary);
   }
-  .m-type-btn .m-type-icon { font-size: 1.5rem; margin-bottom: 2px; }
-  .m-type-btn .m-type-name { font-weight: 800; font-size: 0.86rem; color: #0f172a; }
-  .m-type-btn .m-type-desc { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+  .m-type-btn .m-type-name { font-weight: 700; font-size: 0.88rem; color: var(--text-main); }
+  .m-type-btn.active .m-type-name { color: var(--primary-dark); }
+  .m-type-btn .m-type-desc { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+  .m-type-btn.active .m-type-desc { color: #0284c7; }
 
-  /* Hammaskartta */
   .m-tooth-chart {
-    background: #f8fafc; border-radius: 10px; padding: 10px 6px; border: 1px solid #cbd5e1; margin-top: 6px;
+    background: #f8fafc; border-radius: 6px; padding: 12px 6px; border: 1px solid var(--border-color); margin-top: 4px;
   }
-  .m-tooth-row { display: flex; gap: 3px; justify-content: center; margin-bottom: 5px; }
+  .m-tooth-row { display: flex; gap: 3px; justify-content: center; margin-bottom: 4px; }
   .m-tooth-btn {
-    width: 33px; height: 33px; border-radius: 6px; border: 1.5px solid #94a3b8; background: #fff;
-    font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; user-select: none; transition: all 0.1s; color: #334155;
+    width: 32px; height: 32px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff;
+    font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; user-select: none; transition: all 0.1s; color: #334155; font-family: -apple-system, monospace;
   }
-  .m-tooth-btn:active { transform: scale(0.92); }
+  .m-tooth-btn:active { transform: scale(0.94); }
   .m-tooth-btn.selected {
-    background: #0284c7; color: #fff; border-color: #0369a1; box-shadow: 0 2px 6px rgba(2,132,199,0.35);
+    background: var(--primary); color: #fff; border-color: var(--primary-dark);
   }
-  .m-tooth-divider { width: 2px; background: #0f172a; margin: 0 3px; height: 33px; border-radius: 1px; }
+  .m-tooth-divider { width: 1.5px; background: #94a3b8; margin: 0 3px; height: 32px; }
 
-  /* Sävyvalitsin */
   .m-shade-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
   .m-shade-pill {
-    padding: 7px 13px; border-radius: 20px; border: 1.5px solid #cbd5e1; background: #fff;
-    font-weight: 800; font-size: 0.85rem; cursor: pointer; user-select: none; transition: all 0.1s;
+    padding: 7px 14px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff;
+    font-weight: 700; font-size: 0.85rem; cursor: pointer; user-select: none; transition: all 0.1s; color: #334155;
   }
   .m-shade-pill.active { background: #0f172a; color: #fff; border-color: #0f172a; }
 
-  /* Toimintonapit */
   .m-btn-wa-main {
-    background: #25D366; color: #fff; width: 100%; padding: 14px 16px; font-size: 1.05rem; font-weight: 800;
-    border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(37,211,102,0.35);
-    display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;
-    text-decoration: none; user-select: none;
+    background: #16a34a; color: #fff; width: 100%; padding: 14px 16px; font-size: 1rem; font-weight: 700;
+    border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    margin-top: 14px; text-decoration: none; user-select: none; transition: background 0.12s ease;
   }
-  .m-btn-wa-main:active { transform: scale(0.98); background: #20ba59; }
+  .m-btn-wa-main:hover { background: #15803d; }
+  .m-btn-wa-main:active { transform: scale(0.99); background: #166534; }
 
   .m-btn-copy-main {
-    background: #0284c7; color: #fff; width: 100%; padding: 12px 16px; font-size: 0.95rem; font-weight: 800;
-    border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    gap: 8px; margin-top: 8px; user-select: none;
+    background: #f1f5f9; color: #334155; width: 100%; padding: 11px 16px; font-size: 0.9rem; font-weight: 600;
+    border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    margin-top: 8px; user-select: none; transition: all 0.12s ease;
   }
-  .m-btn-copy-main:active { transform: scale(0.98); background: #0369a1; }
+  .m-btn-copy-main:hover { background: #e2e8f0; color: #0f172a; }
 </style>
 </head>
 <body>
 
 <div class="screen-toolbar">
   <div class="toolbar-brand">
-    <span style="font-size:1.3rem;">🦷</span>
-    <div>
-      <h3>Hammaslaboratorio Neodent</h3>
-    </div>
+    <h3>Hammaslaboratorio Neodent</h3>
+    <span>Mobiilityölähete</span>
   </div>
   <div>
     <button type="button" class="btn-wa-top" onclick="sendViaWhatsApp()">
-      📲 Lähetä WhatsAppilla
+      Lähetä WhatsAppilla
     </button>
   </div>
 </div>
 
 <div class="m-container">
-  <div class="m-hero">
-    <div class="m-hero-sub">Hammaslaboratorio Neodent</div>
-    <h1>⚡ Sähköinen työlähete</h1>
-    <p>Täytä työn tiedot helposti puhelimella ja lähetä suoraan WhatsAppilla laboratorioon!</p>
+  <div class="m-header-card">
+    <div class="m-header-sub">Hammaslaboratorio Neodent</div>
+    <h1>Sähköinen työlähete</h1>
+    <p>Yksilöllisen mittatilaustyön tilauslomake (MDR 2017/745 Liite XIII).</p>
   </div>
 
   <!-- 1. Tilaaja & Potilastunniste -->
   <div class="m-card">
     <div class="m-card-title">
-      <span>🏥 1. Vastaanotto &amp; Potilas</span>
+      <span>1. Vastaanotto ja potilas</span>
     </div>
     <div>
       <label class="m-label">Vastaanotto / Klinikka *</label>
-      <input type="text" id="m_clinic" class="m-input" placeholder="esim. Hammaslääkäriasema...">
+      <input type="text" id="m_clinic" class="m-input" placeholder="Vastaanoton virallinen nimi...">
     </div>
-    <div style="display:flex; gap:8px;">
+    <div style="display:flex; gap:10px;">
       <div style="flex:1;">
         <label class="m-label">Hammaslääkäri</label>
         <input type="text" id="m_dentist" class="m-input" placeholder="Lääkärin nimi...">
@@ -154,49 +165,43 @@
       </div>
     </div>
     <div>
-      <label class="m-label" style="color:#0284c7;">
+      <label class="m-label" style="color:var(--primary-dark);">
         Potilastunniste * <span class="m-hint">(nimikirjaimet tai potilasnro, ei henkilötunnusta)</span>
       </label>
-      <input type="text" id="m_patient" class="m-input" placeholder="esim. M.V. tai #4012" style="font-weight:700; border-color:#0284c7;">
+      <input type="text" id="m_patient" class="m-input" placeholder="esim. M.V. tai 4012" style="font-weight:700; border-color:var(--primary);">
     </div>
   </div>
 
   <!-- 2. Työtyyppi -->
   <div class="m-card">
     <div class="m-card-title">
-      <span>🦷 2. Tilattava työtyyppi *</span>
+      <span>2. Tilattava rakenne</span>
     </div>
-    <input type="hidden" id="m_work_type" value="Zirkonia (Kruunut/sillat)">
+    <input type="hidden" id="m_work_type" value="Zirkonia (Kruunut ja sillat)">
     <div class="m-type-grid">
-      <div class="m-type-btn active" data-type="Zirkonia (Kruunut/sillat)" onclick="selectMobileType(this)">
-        <div class="m-type-icon">👑</div>
+      <div class="m-type-btn active" data-type="Zirkonia (Kruunut ja sillat)" onclick="selectMobileType(this)">
         <div class="m-type-name">Zirkonia</div>
-        <div class="m-type-desc">Kruunut ja sillat</div>
+        <div class="m-type-desc">Monoliitti tai kerrostettu</div>
       </div>
-      <div class="m-type-btn" data-type="LiSi / e.max (Kruunut/laminaatit)" onclick="selectMobileType(this)">
-        <div class="m-type-icon">💎</div>
+      <div class="m-type-btn" data-type="GC LiSi / e.max" onclick="selectMobileType(this)">
         <div class="m-type-name">LiSi / e.max</div>
-        <div class="m-type-desc">Kruunut, laminaatit</div>
+        <div class="m-type-desc">Kruunut ja laminaatit</div>
       </div>
-      <div class="m-type-btn" data-type="Digiranka (Bego SLM)" onclick="selectMobileType(this)">
-        <div class="m-type-icon">⚙️</div>
-        <div class="m-type-name">Digiranka</div>
-        <div class="m-type-desc">Bego SLM / CoCr</div>
+      <div class="m-type-btn" data-type="Digiranka SLM (Bego)" onclick="selectMobileType(this)">
+        <div class="m-type-name">Digiranka SLM</div>
+        <div class="m-type-desc">Laserhitsattu CoCr</div>
       </div>
       <div class="m-type-btn" data-type="Pohjaus / Korjaus" onclick="selectMobileType(this)">
-        <div class="m-type-icon">⚡</div>
         <div class="m-type-name">Pohjaus / Korjaus</div>
-        <div class="m-type-desc">Pika-akryylityöt</div>
+        <div class="m-type-desc">Akryyli- ja proteesikorjaukset</div>
       </div>
-      <div class="m-type-btn" data-type="Purentakisko (Erkodur/3D)" onclick="selectMobileType(this)">
-        <div class="m-type-icon">🛡️</div>
+      <div class="m-type-btn" data-type="Purentakisko" onclick="selectMobileType(this)">
         <div class="m-type-name">Purentakisko</div>
-        <div class="m-type-desc">Erkodur / 3D-kisko</div>
+        <div class="m-type-desc">Erkodur tai 3D-tulostettu</div>
       </div>
       <div class="m-type-btn" data-type="Proteesi (Koko/osaproteesi)" onclick="selectMobileType(this)">
-        <div class="m-type-icon">🦿</div>
         <div class="m-type-name">Proteesi</div>
-        <div class="m-type-desc">Koko- ja osaproteesi</div>
+        <div class="m-type-desc">Koko- ja osaproteesit</div>
       </div>
     </div>
   </div>
@@ -204,11 +209,11 @@
   <!-- 3. Hammaskartta -->
   <div class="m-card">
     <div class="m-card-title">
-      <span>🎯 3. Valitse hampaat (FDI)</span>
-      <span id="m-teeth-badge" style="font-size:0.8rem; font-weight:800; color:#0284c7;">(valitse alta)</span>
+      <span>3. Hammaskaavio (FDI)</span>
+      <span id="m-teeth-badge" style="font-size:0.78rem; font-weight:700; color:var(--primary); text-transform:none;">(ei valittu)</span>
     </div>
     <div class="m-tooth-chart">
-      <div style="font-size:10px; font-weight:bold; color:#64748b; display:flex; justify-content:space-between; margin-bottom:4px; padding:0 4px;">
+      <div style="font-size:10px; font-weight:600; color:#64748b; display:flex; justify-content:space-between; margin-bottom:4px; padding:0 4px;">
         <span>OIKEA (Yläleuka 18–11)</span>
         <span>(Vasen 21–28) VASEN</span>
       </div>
@@ -231,7 +236,7 @@
         <div class="m-tooth-btn" data-tooth="27" onclick="toggleTooth(this)">27</div>
         <div class="m-tooth-btn" data-tooth="28" onclick="toggleTooth(this)">28</div>
       </div>
-      <div style="font-size:10px; font-weight:bold; color:#64748b; display:flex; justify-content:space-between; margin:8px 0 4px; padding:0 4px;">
+      <div style="font-size:10px; font-weight:600; color:#64748b; display:flex; justify-content:space-between; margin:8px 0 4px; padding:0 4px;">
         <span>OIKEA (Alaleuka 48–41)</span>
         <span>(Vasen 31–38) VASEN</span>
       </div>
@@ -260,7 +265,7 @@
   <!-- 4. Sävy -->
   <div class="m-card">
     <div class="m-card-title">
-      <span>🎨 4. Sävy (VITA)</span>
+      <span>4. Sävy (VITA)</span>
     </div>
     <input type="hidden" id="m_shade" value="A2">
     <div class="m-shade-grid">
@@ -275,16 +280,16 @@
       <div class="m-shade-pill" onclick="selectShade(this, 'Bleach')">Bleach</div>
     </div>
     <div>
-      <input type="text" id="m_custom_shade" class="m-input" placeholder="Tai muu sävy / karakterisointi..." oninput="onCustomShade(this.value)">
+      <input type="text" id="m_custom_shade" class="m-input" placeholder="Muu sävy / erikoismääritys..." oninput="onCustomShade(this.value)">
     </div>
   </div>
 
   <!-- 5. Aikataulu & Erityistoiveet -->
   <div class="m-card">
     <div class="m-card-title">
-      <span>📅 5. Aikataulu &amp; Erityistoiveet</span>
+      <span>5. Aikataulu ja lisäohjeet</span>
     </div>
-    <div style="display:flex; gap:8px;">
+    <div style="display:flex; gap:10px;">
       <div style="flex:1;">
         <label class="m-label">Toivottu toimituspvm *</label>
         <input type="date" id="m_date_due" class="m-input">
@@ -296,22 +301,21 @@
     </div>
     <div>
       <label class="m-label">Erityistoiveet laboratoriolle</label>
-      <textarea id="m_notes" class="m-textarea" placeholder="esim. purennan kevennys, kontaktitiukkuus, välivaiheet, materiaalitarkennus..."></textarea>
+      <textarea id="m_notes" class="m-textarea" placeholder="Purentasuhde, kontaktitiukkuus, välivaiheet, materiaalitarkennukset..."></textarea>
     </div>
   </div>
 
   <!-- Toimintonapit -->
   <button type="button" class="m-btn-wa-main" onclick="sendViaWhatsApp()">
-    <span style="font-size:1.3rem;">📲</span> Lähetä WhatsAppilla laboratorioon
+    Lähetä lähete WhatsAppilla
   </button>
   <button type="button" class="m-btn-copy-main" onclick="copyOrderText()">
-    📋 Kopioi teksti leikepöydälle
+    Kopioi tilausteksti leikepöydälle
   </button>
 
-  <div style="text-align:center; font-size:0.75rem; color:#64748b; margin-top:20px; line-height:1.4;">
-    <strong>Hammaslaboratorio Neodent</strong><br>
-    Aninkaistenkatu 3 B 22, 20100 Turku · Y-tunnus 3487405-3<br>
-    Puh. <strong>045 121 5133</strong> · hammaslab@gmail.com
+  <div style="text-align:center; font-size:0.75rem; color:#64748b; margin-top:24px; line-height:1.5;">
+    Hammaslaboratorio Neodent · Y-tunnus 3487405-3<br>
+    Aninkaistenkatu 3 B 22, 20100 Turku · Puh. 045 121 5133 · hammaslab@gmail.com
   </div>
 </div>
 
@@ -337,7 +341,7 @@ function toggleTooth(btn) {
   selectedTeeth.sort(function(a,b) { return parseInt(a,10) - parseInt(b,10); });
   var badge = document.getElementById('m-teeth-badge');
   if (badge) {
-    badge.textContent = selectedTeeth.length > 0 ? ('d.' + selectedTeeth.join(', ')) : '(valitse alta)';
+    badge.textContent = selectedTeeth.length > 0 ? ('d.' + selectedTeeth.join(', ')) : '(ei valittu)';
   }
 }
 
@@ -387,31 +391,31 @@ function collectData() {
 }
 
 function buildMessage(d) {
-  var msg = "🦷 *TYÖLÄHETE — Hammaslaboratorio Neodent*\n";
-  msg += "━━━━━━━━━━━━━━━━━━━━\n";
+  var msg = "HAMMASLABORATORIO NEODENT — TYÖLÄHETE\n";
+  msg += "========================================\n";
 
-  if (d.clinic) msg += "🏥 *Klinikka:* " + d.clinic + "\n";
-  if (d.dentist) msg += "👨‍⚕️ *Lääkäri:* " + d.dentist + "\n";
-  if (d.contact) msg += "📞 *Yhteys:* " + d.contact + "\n";
+  if (d.clinic) msg += "Vastaanotto: " + d.clinic + "\n";
+  if (d.dentist) msg += "Lääkäri: " + d.dentist + "\n";
+  if (d.contact) msg += "Yhteystieto: " + d.contact + "\n";
 
-  msg += "👤 *Potilastunniste:* " + (d.patient || "—") + "\n";
+  msg += "Potilastunniste: " + (d.patient || "-") + " (MDR Liite XIII)\n";
   if (d.dateSent || d.dateDue) {
-    msg += "📅 *Aikataulu:* Lähetetty: " + (d.dateSent || "—") + " ➔ Toivottu: *" + (d.dateDue || "—") + "*\n";
+    msg += "Aikataulu: Lähetetty: " + (d.dateSent || "-") + " | Toivottu: " + (d.dateDue || "-") + "\n";
   }
 
-  msg += "👑 *Työtyyppi:* " + d.workType + "\n";
+  msg += "Työtyyppi: " + d.workType + "\n";
   if (d.teeth.length > 0) {
-    msg += "🎯 *Hampaat (FDI):* d." + d.teeth.join(", ") + "\n";
+    msg += "Hampaat (FDI): d." + d.teeth.join(", ") + "\n";
   }
   if (d.shade) {
-    msg += "🎨 *Sävy:* " + d.shade + "\n";
+    msg += "Sävy: " + d.shade + "\n";
   }
   if (d.notes) {
-    msg += "📝 *Huomiot:* " + d.notes + "\n";
+    msg += "\nErityistoiveet:\n" + d.notes + "\n";
   }
 
-  msg += "━━━━━━━━━━━━━━━━━━━━\n";
-  msg += "Lähetetty Neodentin mobiililähetteen kautta.";
+  msg += "========================================\n";
+  msg += "MDR 2017/745 Liite XIII yksilöllinen lääkinnällinen laite.";
   return msg;
 }
 
@@ -433,7 +437,7 @@ function copyOrderText() {
   var text = buildMessage(d);
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
-      alert("✓ Lähetteen tiedot kopioitu leikepöydälle!");
+      alert("Lähetteen tiedot kopioitu leikepöydälle.");
     }).catch(function() {
       fallbackCopy(text);
     });
@@ -452,7 +456,7 @@ function fallbackCopy(text) {
   ta.select();
   try {
     document.execCommand('copy');
-    alert("✓ Lähetteen tiedot kopioitu leikepöydälle!");
+    alert("Lähetteen tiedot kopioitu leikepöydälle.");
   } catch (err) {
     alert("Kopiointi ei onnistunut automaattisesti.");
   }
